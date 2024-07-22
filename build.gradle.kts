@@ -1,5 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.*
 
+val properties = Properties().apply {
+    load(rootProject.file("secrets.properties").reader())
+}
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -13,6 +17,7 @@ tasks{
     withType<KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs += listOf("-Xskip-prerelease-check")
+            jvmTarget = "21"
         }
     }
 }
@@ -24,6 +29,7 @@ application {
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
+
 }
 
 repositories {
@@ -31,8 +37,8 @@ repositories {
         maven("https://maven.pkg.github.com/icpc/live-v3/") {
             group = "org.icpclive"
             credentials {
-                username = System.getenv("GIT_USER")!!
-                password = System.getenv("GIT_PASS")!!
+                username = properties["gitUser"] as String
+                password = properties["gitPassword"] as String
             }
         }
     }
