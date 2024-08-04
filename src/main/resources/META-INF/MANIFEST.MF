@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: com.ballons.ApplicationKt
+Main-Class: com.balloons.ApplicationKt
 

@@ -1,4 +1,4 @@
-package com.ballons
+package com.balloons
 
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory
 
 class CDSFetcher(private val settings: CdsCommandLineOptions) {
     val storage = Storage()
+    //todo make logging option from cmd
     val log = LoggerFactory.getLogger(this.javaClass)
     private val cds = settings.toFlow(log)
     private val contestInfo = CompletableDeferred<StateFlow<ContestInfo>>()

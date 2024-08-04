@@ -1,6 +1,6 @@
-package com.ballons
+package com.balloons
 
-import com.ballons.Submissions.runId
+import com.balloons.Submissions.runId
 import org.icpclive.cds.api.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq

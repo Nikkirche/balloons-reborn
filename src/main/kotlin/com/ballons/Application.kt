@@ -1,6 +1,6 @@
-package com.ballons
+package com.balloons
 
-import com.ballons.plugins.*
+import com.balloons.plugins.*
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.groups.provideDelegate
 import io.ktor.server.application.*

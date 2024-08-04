@@ -1,4 +1,4 @@
-package com.ballons
+package com.balloons
 
 class ApplicationTest {
 }
