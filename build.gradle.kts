@@ -1,9 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 
-val properties = Properties().apply {
-    load(rootProject.file("secrets.properties").reader())
-}
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -34,12 +31,8 @@ application {
 
 repositories {
     repositories {
-        maven("https://maven.pkg.github.com/icpc/live-v3/") {
-            group = "org.icpclive"
-            credentials {
-                username = properties["gitUser"] as String
-                password = properties["gitPassword"] as String
-            }
+        maven("https://jitpack.io") {
+            group = "com.github.icpc.live-v3"
         }
     }
     mavenCentral()
@@ -61,7 +54,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-    implementation("org.icpclive:org.icpclive.cds.full:+")
+    implementation("com.github.icpc.live-v3:org.icpclive.cds.full:3.3.1")
     implementation("org.mariadb.jdbc:mariadb-java-client:3.4.0")
 
 }
