@@ -34,16 +34,17 @@ object Events : IntIdTable("events") {
     //dummy for compatibilty
     val url = varchar("url",255).default("")
     val state = integer("state").default(0)
+    val hasCustomMapping = bool("has_custom_mapping").default(false)
 }
 object Teams : IntIdTable("teams"){
     val name = varchar("name",255)
     val state  = integer("state").default(0)
     val eventId = integer("event_id")
     val longName = varchar("long_name", 255)
-    val place = varchar("place",255).default("")
-    val hall = varchar("hall",255).default("")
+    val place = integer("place").nullable()
+    val hall = integer("hall").nullable()
 }
-data class Team(val id: Int, val name: String, val eventId: Int, val longName :String, val place:String,val hall:String) {
+data class Team(val id: Int, val name: String, val eventId: Int, val longName :String, val place:Int?,val hall:Int?) {
     companion object {
         fun fromRow(resultRow: ResultRow) = Team(
             id = resultRow[Teams.id].value,

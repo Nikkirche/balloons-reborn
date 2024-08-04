@@ -2,6 +2,7 @@ package com.balloons
 
 import com.balloons.Submissions.runId
 import org.icpclive.cds.api.*
+import org.icpclive.cds.util.getLogger
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -88,11 +89,14 @@ class Storage {
     }
 
     fun addTeam(id: String, team: TeamInfo, eventId: Int): Int {
+        val mapping = getTeamPlaceAndHall(team)
         return transaction {
             return@transaction Teams.insertAndGetId {
                 it[Teams.longName] = team.fullName
                 it[Teams.eventId] = eventId
                 it[Teams.name] = id
+                it[Teams.hall] = mapping.second
+                it[Teams.place] = mapping.first
             }
         }.value
     }
@@ -102,5 +106,35 @@ class Storage {
             return@transaction Teams.selectAll().where(Teams.eventId eq eventId).map { Team.fromRow(it) }
                 .sortedBy { it.name }
         }
+    }
+
+    fun getTeamPlaceAndHall(teamInfo: TeamInfo): Pair<Int?, Int?> {
+        val place = teamInfo.customFields["grabberPeerName"]
+        val baseNumber = Regex("\\d{3}")
+        val charBefore = Regex("\\w\\d{3}")
+        return when {
+            place == null -> {
+                logger.warning { "Couldn't get place for team with following id - ${teamInfo.id.value}"}
+                Pair(null, null)
+            }
+
+            baseNumber.matches(place) -> {
+                val p = place.toInt()
+                Pair(p, p / 100 + 1)
+            }
+
+            charBefore.matches(place) -> {
+                val p = place.substring(1, 3).toInt()
+                Pair(p, p / 100 + 1)
+            }
+
+            else -> {
+                logger.warning { "Couldn't get hall for following place - $place" }
+                Pair(null, null)
+            }
+        }
+    }
+    private companion object {
+        val logger by getLogger()
     }
 }

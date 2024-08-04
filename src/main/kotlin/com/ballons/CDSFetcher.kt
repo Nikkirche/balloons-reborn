@@ -8,13 +8,13 @@ import org.icpclive.cds.InfoUpdate
 import org.icpclive.cds.RunUpdate
 import org.icpclive.cds.api.*
 import org.icpclive.cds.cli.CdsCommandLineOptions
+import org.icpclive.cds.util.getLogger
 import org.slf4j.LoggerFactory
 
-class CDSFetcher(private val settings: CdsCommandLineOptions) {
+class CDSFetcher(settings: CdsCommandLineOptions) {
     val storage = Storage()
     //todo make logging option from cmd
-    val log = LoggerFactory.getLogger(this.javaClass)
-    private val cds = settings.toFlow(log)
+    private val cds = settings.toFlow()
     private val contestInfo = CompletableDeferred<StateFlow<ContestInfo>>()
     fun run(scope: CoroutineScope) {
         val loaded = cds.shareIn(scope, SharingStarted.Eagerly, Int.MAX_VALUE)
@@ -23,7 +23,7 @@ class CDSFetcher(private val settings: CdsCommandLineOptions) {
         scope.launch {
             contestInfo.complete(loaded.filterIsInstance<InfoUpdate>().map { it.newInfo }.stateIn(scope))
         }
-        log.info("starting runs processing ...")
+        logger.info { "starting runs processing for contest  ..." }
         scope.launch {
             val info = contestInfo.await().value
             val eventId = storage.createEvent(info)
@@ -63,8 +63,7 @@ class CDSFetcher(private val settings: CdsCommandLineOptions) {
         is RunResult.IOI -> false
         is RunResult.InProgress -> false
     }
-
-    fun getTeamToHall(): Int {
-        return 0
+    private companion object {
+        val logger by getLogger()
     }
 }
