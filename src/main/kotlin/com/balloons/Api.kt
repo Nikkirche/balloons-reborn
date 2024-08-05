@@ -1,8 +1,6 @@
 package com.balloons
 
 
-import com.balloons.Submissions.default
-import com.balloons.Teams.default
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ResultRow
 

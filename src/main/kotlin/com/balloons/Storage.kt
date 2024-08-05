@@ -1,5 +1,6 @@
-package com.balloons
+package com.ballons
 
+import com.balloons.*
 import com.balloons.Submissions.runId
 import org.icpclive.cds.api.*
 import org.icpclive.cds.util.getLogger
@@ -9,14 +10,16 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.time.DurationUnit
 
 class Storage {
-    private val connection = Database.connect(
-        url = "jdbc:mariadb://localhost:3306/balloons",
-        driver = "org.mariadb.jdbc.Driver",
-        user = System.getenv("USER")!!,
-        password = System.getenv("PASSWORD")!!
-    )
+    val connection: Database
 
     init {
+        val dbSettings = DbOptions.fromInputStream(Config.dbConfig.toFile().inputStream())
+        connection = Database.connect(
+            url = "jdbc:mariadb://localhost:3306/balloons",
+            driver = "org.mariadb.jdbc.Driver",
+            user = dbSettings.user,
+            password = dbSettings.password
+        )
         transaction(connection) {
             SchemaUtils.create(Submissions)
             SchemaUtils.create(Events)
@@ -74,9 +77,9 @@ class Storage {
     fun addProblem(id: String, problem: ProblemInfo, eventId: Int): Int {
         return transaction {
             return@transaction Problems.insertAndGetId {
-                it[Problems.name] = problem.fullName
+                it[name] = problem.fullName
                 it[Problems.eventId] = eventId
-                it[Problems.letter] = id
+                it[letter] = id
             }.value
         }
     }
@@ -93,11 +96,11 @@ class Storage {
         val mapping = getTeamPlaceAndHall(team)
         return transaction {
             return@transaction Teams.insertAndGetId {
-                it[Teams.longName] = team.fullName
+                it[longName] = team.fullName
                 it[Teams.eventId] = eventId
-                it[Teams.name] = id
-                it[Teams.hall] = mapping.second
-                it[Teams.place] = mapping.first
+                it[name] = id
+                it[hall] = mapping.second
+                it[place] = mapping.first
             }
         }.value
     }
@@ -115,7 +118,7 @@ class Storage {
         val regionBefore = Regex("\\w+\\d{3}")
         return when {
             place == null -> {
-                logger.warning { "Couldn't get place for team with following id - ${teamInfo.id.value}"}
+                logger.warning { "Couldn't get place for team with following id - ${teamInfo.id.value}" }
                 Pair(null, null)
             }
 
@@ -135,6 +138,7 @@ class Storage {
             }
         }
     }
+
     private companion object {
         val logger by getLogger()
     }

@@ -1,5 +1,6 @@
 package com.balloons
 
+import com.ballons.Storage
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -9,7 +10,6 @@ import org.icpclive.cds.RunUpdate
 import org.icpclive.cds.api.*
 import org.icpclive.cds.cli.CdsCommandLineOptions
 import org.icpclive.cds.util.getLogger
-import org.slf4j.LoggerFactory
 
 class CDSFetcher(settings: CdsCommandLineOptions) {
     val storage = Storage()

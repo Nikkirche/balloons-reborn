@@ -1,0 +1,138 @@
+{
+  "problemOverrides": {
+    "A": {
+      "color": "#FFFF00",
+      "unsolvedColor": "#808080",
+    },
+    "B": {
+      "color": "#FF00FE",
+      "unsolvedColor": "#808080"
+    },
+    "C": {
+      "color": "#761946",
+      "unsolvedColor": "#808080"
+    },
+    "D": {
+      "color": "#FE9900",
+      "unsolvedColor": "#808080"
+    },
+    "E": {
+      "color": "#0000FE",
+      "unsolvedColor": "#808080"
+    },
+    "F": {
+      "color": "#000000",
+      "unsolvedColor": "#808080"
+    },
+    "G": {
+      "color": "#04FF00",
+      "unsolvedColor": "#808080"
+    },
+    "H": {
+      "color": "#38771E",
+      "unsolvedColor": "#808080"
+    },
+    "I": {
+      "color": "#9B01FF",
+      "unsolvedColor": "#808080"
+    },
+    "J": {
+      "color": "#E9D1DE",
+      "unsolvedColor": "#808080"
+    },
+    "K": {
+      "color": "#FFFFFF",
+      "unsolvedColor": "#808080"
+    },
+    "L": {
+      "color": "#FE0000",
+      "unsolvedColor": "#808080"
+    }
+  },
+  "teamNameRegexes": {
+    "customFields": {
+      "funnyName": {
+        "[^:]*: (.*) \\([^)]*\\)" : "$1"
+      }
+    },
+    "organizationRegex": {
+      "^([^:]*).*": "$1"
+    }
+  },
+  "teamOverrideTemplate": {
+    "hashTag": "{teamId}",
+    "displayName": "{orgDisplayName} {funnyName}",
+    "medias": {
+      "achievement": {
+        "type": "Image",
+        "url": "/media/ach/{teamId}.svg"
+      },
+      "photo": {
+        "type": "Image",
+        "url": "/media/ach/{teamId}.svg"
+      },
+      "screen": {
+        "type": "WebRTCGrabberConnection",
+        "peerName": "{grabberPeerName}",
+        "url": "http://{grabberIp}:8080",
+        "streamType": "desktop",
+        "credential": "live"
+      },
+      "camera": {
+        "type": "WebRTCGrabberConnection",
+        "url": "{grabberUrl}",
+        "peerName": "http://{grabberIp}:8080",
+        "streamType": "webcam",
+        "credential": "live"
+      }
+    }
+  },
+  "freezeTimeSeconds": 14400,
+  "awardsSettings": {
+    "medals": [
+      {"id": "gold-medal", "citation": "Gold Medal", "color": "GOLD", "maxRank": 4},
+      {"id": "silver-medal", "citation": "Silver Medal", "color": "SILVER", "maxRank": 8},
+      {"id": "bronze-medal", "citation": "Bronze Medal", "color": "BRONZE", "maxRank": 12}
+    ],
+    "championTitle": "Northern Eurasia Finals Champions",
+    "rankAwardsMaxRank": 13,
+    "manual": [
+      {
+        "id": "qualified",
+        "citation": "Qualified to world finals",
+        "teamCdsIds": []
+      }
+    ]
+  },
+  "teamIdRegexes": {
+    "customFields": {
+      "grabberPeerName": {
+        "spb(\\d\\d\\d)": "$1",
+        "geo(\\d\\d\\d)": "G$1",
+        "nsk(\\d\\d\\d)": "N$1",
+        "kaz(\\d\\d\\d)": "K$1"
+      },
+      "grabberIp": {
+        "spb(\\d\\d\\d)": "192.168.0.112",
+        "geo(\\d\\d\\d)": "192.168.0.175",
+        "nsk(\\d\\d\\d)": "192.168.0.175",
+        "kaz(\\d\\d\\d)": "192.168.0.175"
+      }
+    },
+    "groupRegex": {
+      "local": "spb(\\d\\d\\d)",
+      "remote": "[^s][^p][^b](\\d\\d\\d)"
+    }
+  },
+  "scoreboardOverrides": {
+    "showTeamsWithoutSubmissions": true
+  },
+  "queueSettings": {
+    "waitTimeSeconds": 60,
+    "firstToSolveWaitTimeSeconds": 120,
+    "featuredRunWaitTimeSeconds": 60,
+    "inProgressRunWaitTimeSeconds": 300,
+    "maxQueueSize": 15,
+    "maxUntestedRun": 5
+  }
+}

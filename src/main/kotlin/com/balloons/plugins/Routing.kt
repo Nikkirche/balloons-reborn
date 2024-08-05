@@ -1,6 +1,6 @@
 package com.balloons.plugins
 
-import com.balloons.Storage
+import com.ballons.Storage
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
