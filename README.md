@@ -8,9 +8,7 @@
 * python 3
 ### Запуск скрипта обновления(CDS)
 1. Скачайте данный репозиторий
-2. Запустите скрипт ball.py для создания структуры базы данных   
-3. Создайте файл secrets.properties с полями gitUser и gitPassword(получить данные для них можно [здесь](https://docs.github.com/en/packages/learn-github-packages/introduction-to-github-packages))
-4. Запустите ```**ENV_VARS** ./gradlew run --args='-c config'  ```, где config это папка с конфигом парсера.  
+2. Запустите ```**ENV_VARS** ./gradlew run --args='-c config'  ```, где config это папка с конфигом парсера.  
 Формат конфига можно посмотреть [тут](https://github.com/icpc/live-v3).
 Логин и пароль бд указывается как переменные окружения(USER и PASSWORD соответственно)
 ### Запуск сайта

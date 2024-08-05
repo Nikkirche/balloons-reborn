@@ -38,7 +38,7 @@ object Events : IntIdTable("events") {
 }
 object Teams : IntIdTable("teams"){
     val name = varchar("name",255)
-    val state  = integer("state").default(0)
+    val state  = integer("state").default(1)
     val eventId = integer("event_id")
     val longName = varchar("long_name", 255)
     val place = integer("place").nullable()
@@ -71,4 +71,11 @@ data class Problem(val id: Int, val name: String, val eventId: Int) {
             eventId = resultRow[Problems.eventId]
         )
     }
+}
+
+object Volunteers : IntIdTable("volunteers") {
+    val external_id = varchar("external_id", 255)
+    val name = varchar("name", 255)
+    val url = varchar("url", 255)
+    val access = integer("access")
 }

@@ -22,6 +22,7 @@ class Storage {
             SchemaUtils.create(Events)
             SchemaUtils.create(Problems)
             SchemaUtils.create(Teams)
+            SchemaUtils.create(Volunteers)
         }
     }
 
@@ -111,7 +112,7 @@ class Storage {
     fun getTeamPlaceAndHall(teamInfo: TeamInfo): Pair<Int?, Int?> {
         val place = teamInfo.customFields["grabberPeerName"]
         val baseNumber = Regex("\\d{3}")
-        val charBefore = Regex("\\w\\d{3}")
+        val regionBefore = Regex("\\w+\\d{3}")
         return when {
             place == null -> {
                 logger.warning { "Couldn't get place for team with following id - ${teamInfo.id.value}"}
@@ -123,8 +124,8 @@ class Storage {
                 Pair(p, p / 100 + 1)
             }
 
-            charBefore.matches(place) -> {
-                val p = place.substring(1, 3).toInt()
+            regionBefore.matches(place) -> {
+                val p = place.filter { it.isDigit() }.toInt()
                 Pair(p, p / 100 + 1)
             }
 
