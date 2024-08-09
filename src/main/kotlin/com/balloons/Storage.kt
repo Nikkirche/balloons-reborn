@@ -2,15 +2,19 @@ package com.ballons
 
 import com.balloons.*
 import com.balloons.Submissions.runId
-import org.icpclive.cds.api.*
+import org.icpclive.cds.api.ContestInfo
+import org.icpclive.cds.api.ProblemInfo
+import org.icpclive.cds.api.RunInfo
+import org.icpclive.cds.api.TeamInfo
 import org.icpclive.cds.util.getLogger
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.time.DurationUnit
 
-class Storage {
+object Storage {
     val connection: Database
+    val logger by getLogger()
 
     init {
         val dbSettings = DbOptions.fromInputStream(Config.dbConfig.toFile().inputStream())
@@ -137,9 +141,5 @@ class Storage {
                 Pair(null, null)
             }
         }
-    }
-
-    private companion object {
-        val logger by getLogger()
     }
 }

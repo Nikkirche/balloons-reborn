@@ -16,7 +16,7 @@ import org.icpclive.cds.cli.CdsCommandLineOptions
 import java.io.InputStream
 
 @Serializable
-class DbOptions(public val user: String, public val password: String) {
+class DbOptions(val user: String, val password: String) {
     @OptIn(ExperimentalSerializationApi::class)
     companion object {
         private val json = Json {
@@ -41,5 +41,3 @@ object Config : CliktCommand(printHelpOnEmptyArgs = true) {
         }
     }
 }
-
-val config: Config get() = Config

@@ -7,12 +7,13 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import org.icpclive.cds.InfoUpdate
 import org.icpclive.cds.RunUpdate
-import org.icpclive.cds.api.*
+import org.icpclive.cds.api.ContestInfo
+import org.icpclive.cds.api.RunResult
 import org.icpclive.cds.cli.CdsCommandLineOptions
 import org.icpclive.cds.util.getLogger
 
 class CDSFetcher(settings: CdsCommandLineOptions) {
-    val storage = Storage()
+    val storage = Storage
     //todo make logging option from cmd
     private val cds = settings.toFlow()
     private val contestInfo = CompletableDeferred<StateFlow<ContestInfo>>()

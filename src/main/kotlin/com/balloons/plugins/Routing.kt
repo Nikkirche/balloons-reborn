@@ -6,7 +6,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
-    val storage = Storage()
+    val storage = Storage
     routing {
         get("/") {
 
