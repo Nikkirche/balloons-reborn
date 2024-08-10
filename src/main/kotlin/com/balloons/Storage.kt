@@ -116,6 +116,25 @@ object Storage {
         }
     }
 
+    fun getMapping(eventId: Int): List<Mapping> {
+        return transaction {
+            return@transaction Teams.select(Teams.name, Teams.place, Teams.hall).where(Teams.eventId eq eventId)
+                .map { Team.mappingFromRow(it) }
+        }
+    }
+
+    fun writeMapping(eventId: Int, mapping: List<Mapping>) {
+        transaction {
+            for (m in mapping) {
+                Teams.update({ (Teams.eventId eq eventId) and (Teams.name eq m.team) }) {
+                    val value = m.value
+                    it[Teams.hall] = value.hall.toInt()
+                    it[Teams.place] = value.place.toInt()
+                }
+            }
+        }
+    }
+
     fun getTeamPlaceAndHall(teamInfo: TeamInfo): Pair<Int?, Int?> {
         val place = teamInfo.customFields["grabberPeerName"]
         val baseNumber = Regex("\\d{3}")

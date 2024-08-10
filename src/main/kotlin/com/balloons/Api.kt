@@ -29,20 +29,32 @@ object Submissions : IntIdTable("balloons") {
 
 object Events : IntIdTable("events") {
     val name = varchar("name", 255)
+
     //dummy for compatibilty
-    val url = varchar("url",255).default("")
+    val url = varchar("url", 255).default("")
     val state = integer("state").default(0)
     val hasCustomMapping = bool("has_custom_mapping").default(false)
 }
-object Teams : IntIdTable("teams"){
-    val name = varchar("name",255)
-    val state  = integer("state").default(1)
+
+object Teams : IntIdTable("teams") {
+    val name = varchar("name", 255)
+    val state = integer("state").default(1)
     val eventId = integer("event_id")
     val longName = varchar("long_name", 255)
+
+    //todo place and hall should be moved to string type
     val place = integer("place").nullable()
     val hall = integer("hall").nullable()
 }
-data class Team(val id: Int, val name: String, val eventId: Int, val longName :String, val place:Int?,val hall:Int?) {
+
+data class Team(
+    val id: Int,
+    val name: String,
+    val eventId: Int,
+    val longName: String,
+    val place: Int?,
+    val hall: Int?
+) {
     companion object {
         fun fromRow(resultRow: ResultRow) = Team(
             id = resultRow[Teams.id].value,
@@ -52,8 +64,14 @@ data class Team(val id: Int, val name: String, val eventId: Int, val longName :S
             place = resultRow[Teams.place],
             hall = resultRow[Teams.hall]
         )
+
+        fun mappingFromRow(resultRow: ResultRow) = Mapping(
+            team = resultRow[Teams.name],
+            value = MappingValue(hall = resultRow[Teams.hall].toString(), place = resultRow[Teams.place].toString())
+        )
     }
 }
+
 object Problems : IntIdTable("problems") {
     val letter = varchar("letter", 255)
     val name = varchar("name", 255)

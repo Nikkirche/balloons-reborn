@@ -1,5 +1,4 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.*
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -45,8 +44,9 @@ repositories {
 }
 val exposedVersion: String by project
 dependencies {
-    implementation("io.ktor:ktor-server-core-jvm")
-    implementation("io.ktor:ktor-server-netty-jvm")
+    implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
+    implementation("io.ktor:ktor-server-resources:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-crypt:$exposedVersion")
@@ -58,6 +58,7 @@ dependencies {
     implementation("com.github.icpc.live-v3:org.icpclive.cds.full:3.3.1")
     implementation("org.mariadb.jdbc:mariadb-java-client:3.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
+    implementation("app.softwork:kotlinx-serialization-csv:0.0.18")
 
 }
 
