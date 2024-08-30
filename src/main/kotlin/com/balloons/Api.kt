@@ -29,9 +29,6 @@ object Submissions : IntIdTable("balloons") {
 
 object Events : IntIdTable("events") {
     val name = varchar("name", 255)
-
-    //dummy for compatibilty
-    val url = varchar("url", 255).default("")
     val state = integer("state").default(0)
     val hasCustomMapping = bool("has_custom_mapping").default(false)
 }
@@ -44,7 +41,7 @@ object Teams : IntIdTable("teams") {
 
     //todo place and hall should be moved to string type
     val place = integer("place").nullable()
-    val hall = integer("hall").nullable()
+    val hall = varchar("hall", 255).nullable()
 }
 
 data class Team(
@@ -53,7 +50,7 @@ data class Team(
     val eventId: Int,
     val longName: String,
     val place: Int?,
-    val hall: Int?
+    val hall: String?
 ) {
     companion object {
         fun fromRow(resultRow: ResultRow) = Team(

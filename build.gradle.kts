@@ -12,10 +12,10 @@ plugins {
 
 tasks{
     withType<KotlinCompile> {
-        kotlinOptions {
-            freeCompilerArgs += listOf("-Xskip-prerelease-check")
-            jvmTarget = "21"
-        }
+//        kotlinOptions {
+//            freeCompilerArgs += listOf("-Xskip-prerelease-check")
+//            jvmTarget = "21"
+//        }
     }
 }
 group = "com.balloons"

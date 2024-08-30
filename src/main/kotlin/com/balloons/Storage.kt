@@ -128,14 +128,14 @@ object Storage {
             for (m in mapping) {
                 Teams.update({ (Teams.eventId eq eventId) and (Teams.name eq m.team) }) {
                     val value = m.value
-                    it[Teams.hall] = value.hall.trim().toInt()
+                    it[Teams.hall] = value.hall.trim()
                     it[Teams.place] = value.place.trim().toInt()
                 }
             }
         }
     }
 
-    fun getTeamPlaceAndHall(teamInfo: TeamInfo): Pair<Int?, Int?> {
+    fun getTeamPlaceAndHall(teamInfo: TeamInfo): Pair<Int?, String?> {
         val place = teamInfo.customFields["grabberPeerName"]
         val baseNumber = Regex("\\d{3}")
         val regionBefore = Regex("\\w+\\d{3}")
@@ -147,12 +147,12 @@ object Storage {
 
             baseNumber.matches(place) -> {
                 val p = place.toInt()
-                Pair(p, p / 100 + 1)
+                Pair(p, (p / 100 + 1).toString())
             }
 
             regionBefore.matches(place) -> {
                 val p = place.filter { it.isDigit() }.toInt()
-                Pair(p, p / 100 + 1)
+                Pair(p, (p / 100 + 1).toString())
             }
 
             else -> {
