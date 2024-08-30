@@ -4,6 +4,7 @@ import com.balloons.plugins.configureRouting
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.resources.*
 
 fun main(args: Array<String>) {
     Config.main(args)
@@ -12,5 +13,6 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    install(Resources)
     configureRouting()
 }

@@ -128,8 +128,8 @@ object Storage {
             for (m in mapping) {
                 Teams.update({ (Teams.eventId eq eventId) and (Teams.name eq m.team) }) {
                     val value = m.value
-                    it[Teams.hall] = value.hall.toInt()
-                    it[Teams.place] = value.place.toInt()
+                    it[Teams.hall] = value.hall.trim().toInt()
+                    it[Teams.place] = value.place.trim().toInt()
                 }
             }
         }
