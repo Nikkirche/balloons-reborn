@@ -9,11 +9,13 @@ import org.icpclive.cds.InfoUpdate
 import org.icpclive.cds.RunUpdate
 import org.icpclive.cds.api.ContestInfo
 import org.icpclive.cds.api.RunResult
+import org.icpclive.cds.api.currentContestTime
 import org.icpclive.cds.cli.CdsCommandLineOptions
 import org.icpclive.cds.util.getLogger
 
 class CDSFetcher(settings: CdsCommandLineOptions) {
     val storage = Storage
+
     //todo make logging option from cmd
     private val cds = settings.toFlow()
     private val contestInfo = CompletableDeferred<StateFlow<ContestInfo>>()
@@ -51,7 +53,10 @@ class CDSFetcher(settings: CdsCommandLineOptions) {
                 val submissions = storage.getRunsFromEvent(eventId)
                 runs.filter { it.result.isSolved() }.collect {
                     if (!submissions.contains(it.id.value)) {
-                        storage.createSubmission(eventId, problems[it.problemId.value]!!,teams[it.teamId.value]!!,it)
+                        //wait until the problem and team is updated
+                        val problem = problems[it.problemId.value] ?: return@collect;
+                        val team = teams[it.teamId.value] ?: return@collect;
+                        storage.createSubmission(eventId, problem, team, it)
                         submissions.add(it.id.value)
                     }
                 }
@@ -64,6 +69,7 @@ class CDSFetcher(settings: CdsCommandLineOptions) {
         is RunResult.IOI -> false
         is RunResult.InProgress -> false
     }
+
     private companion object {
         val logger by getLogger()
     }

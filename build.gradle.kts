@@ -55,7 +55,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
-    implementation("com.github.icpc.live-v3:org.icpclive.cds.full:3.3.1")
+    implementation("com.github.icpc.live-v3:org.icpclive.cds.full:3.3.2")
     implementation("org.mariadb.jdbc:mariadb-java-client:3.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     implementation("app.softwork:kotlinx-serialization-csv:0.0.18")

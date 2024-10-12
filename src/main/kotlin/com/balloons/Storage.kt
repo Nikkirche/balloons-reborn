@@ -61,7 +61,7 @@ object Storage {
             if (t.count() == 0.toLong()) {
                 return@transaction Events.insertAndGetId {
                     it[name] = info.name
-                    it[state] = info.status.ordinal
+                    it[state] = 1
                 }
             } else {
                 return@transaction t.first()[Events.id]
@@ -97,6 +97,7 @@ object Storage {
     }
 
     fun addTeam(id: String, team: TeamInfo, eventId: Int): Int {
+        transaction { }
         val mapping = getTeamPlaceAndHall(team)
         return transaction {
             return@transaction Teams.insertAndGetId {
@@ -129,36 +130,23 @@ object Storage {
                 Teams.update({ (Teams.eventId eq eventId) and (Teams.name eq m.team) }) {
                     val value = m.value
                     it[Teams.hall] = value.hall.trim()
-                    it[Teams.place] = value.place.trim().toInt()
+                    it[Teams.place] = value.place.trim()
                 }
             }
         }
     }
 
-    fun getTeamPlaceAndHall(teamInfo: TeamInfo): Pair<Int?, String?> {
-        val place = teamInfo.customFields["grabberPeerName"]
-        val baseNumber = Regex("\\d{3}")
-        val regionBefore = Regex("\\w+\\d{3}")
-        return when {
-            place == null -> {
-                logger.warning { "Couldn't get place for team with following id - ${teamInfo.id.value}" }
-                Pair(null, null)
-            }
-
-            baseNumber.matches(place) -> {
-                val p = place.toInt()
-                Pair(p, (p / 100 + 1).toString())
-            }
-
-            regionBefore.matches(place) -> {
-                val p = place.filter { it.isDigit() }.toInt()
-                Pair(p, (p / 100 + 1).toString())
-            }
-
-            else -> {
-                logger.warning { "Couldn't get hall for following place - $place" }
-                Pair(null, null)
-            }
+    fun getTeamPlaceAndHall(teamInfo: TeamInfo): Pair<String?, String?> {
+        var place = teamInfo.customFields["comp"]
+        val hall = teamInfo.customFields["hall"]
+        if (place == null) {
+            //at least it is unique for the contest
+            place = teamInfo.id.value
+            logger.warning { "Couldn't get place for team with following id - ${teamInfo.id.value}, customFields are following - ${teamInfo.customFields}" }
         }
+        if (hall == null) {
+            logger.warning { "Couldn't get hall for following place - $place, customFields are following - ${teamInfo.customFields}" }
+        }
+        return Pair(place, hall)
     }
 }

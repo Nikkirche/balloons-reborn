@@ -1,138 +1,98 @@
 {
-  "problemOverrides": {
-    "A": {
-      "color": "#FFFF00",
-      "unsolvedColor": "#808080",
-    },
-    "B": {
-      "color": "#FF00FE",
-      "unsolvedColor": "#808080"
-    },
-    "C": {
-      "color": "#761946",
-      "unsolvedColor": "#808080"
-    },
-    "D": {
-      "color": "#FE9900",
-      "unsolvedColor": "#808080"
-    },
-    "E": {
-      "color": "#0000FE",
-      "unsolvedColor": "#808080"
-    },
-    "F": {
-      "color": "#000000",
-      "unsolvedColor": "#808080"
-    },
-    "G": {
-      "color": "#04FF00",
-      "unsolvedColor": "#808080"
-    },
-    "H": {
-      "color": "#38771E",
-      "unsolvedColor": "#808080"
-    },
-    "I": {
-      "color": "#9B01FF",
-      "unsolvedColor": "#808080"
-    },
-    "J": {
-      "color": "#E9D1DE",
-      "unsolvedColor": "#808080"
-    },
-    "K": {
-      "color": "#FFFFFF",
-      "unsolvedColor": "#808080"
-    },
-    "L": {
-      "color": "#FE0000",
-      "unsolvedColor": "#808080"
-    }
-  },
   "teamNameRegexes": {
     "customFields": {
       "funnyName": {
-        "[^:]*: (.*) \\([^)]*\\)" : "$1"
+        "[^:]*: (.*) \\([^)]*\\)": "$1"
       }
     },
     "organizationRegex": {
       "^([^:]*).*": "$1"
     }
   },
-  "teamOverrideTemplate": {
-    "hashTag": "{teamId}",
-    "displayName": "{orgDisplayName} {funnyName}",
-    "medias": {
-      "achievement": {
-        "type": "Image",
-        "url": "/media/ach/{teamId}.svg"
-      },
-      "photo": {
-        "type": "Image",
-        "url": "/media/ach/{teamId}.svg"
-      },
-      "screen": {
-        "type": "WebRTCGrabberConnection",
-        "peerName": "{grabberPeerName}",
-        "url": "http://{grabberIp}:8080",
-        "streamType": "desktop",
-        "credential": "live"
-      },
-      "camera": {
-        "type": "WebRTCGrabberConnection",
-        "url": "{grabberUrl}",
-        "peerName": "http://{grabberIp}:8080",
-        "streamType": "webcam",
-        "credential": "live"
-      }
-    }
-  },
-  "freezeTimeSeconds": 14400,
-  "awardsSettings": {
-    "medals": [
-      {"id": "gold-medal", "citation": "Gold Medal", "color": "GOLD", "maxRank": 4},
-      {"id": "silver-medal", "citation": "Silver Medal", "color": "SILVER", "maxRank": 8},
-      {"id": "bronze-medal", "citation": "Bronze Medal", "color": "BRONZE", "maxRank": 12}
-    ],
-    "championTitle": "Northern Eurasia Finals Champions",
-    "rankAwardsMaxRank": 13,
-    "manual": [
-      {
-        "id": "qualified",
-        "citation": "Qualified to world finals",
-        "teamCdsIds": []
-      }
-    ]
-  },
-  "teamIdRegexes": {
-    "customFields": {
-      "grabberPeerName": {
-        "spb(\\d\\d\\d)": "$1",
-        "geo(\\d\\d\\d)": "G$1",
-        "nsk(\\d\\d\\d)": "N$1",
-        "kaz(\\d\\d\\d)": "K$1"
-      },
-      "grabberIp": {
-        "spb(\\d\\d\\d)": "192.168.0.112",
-        "geo(\\d\\d\\d)": "192.168.0.175",
-        "nsk(\\d\\d\\d)": "192.168.0.175",
-        "kaz(\\d\\d\\d)": "192.168.0.175"
-      }
+  "organizationOverrides": {
+    "Moscow State University": {
+      "displayName": "MSU"
     },
-    "groupRegex": {
-      "local": "spb(\\d\\d\\d)",
-      "remote": "[^s][^p][^b](\\d\\d\\d)"
+    "Moscow Aviation Institute": {
+      "displayName": "MAI"
+    },
+    "* Moscow Aviation Institute": {
+      "displayName": "* MAI"
+    },
+    "Moscow Pedagogical State University": {
+      "displayName": "MPSU"
+    },
+    "Moscow Institute of Physics and Technology": {
+      "displayName": "MIPT"
+    },
+    "Moscow Technological University - MIREA": {
+      "displayName": "MIREA"
+    },
+    "National Research University Higher School of Economics": {
+      "displayName": "HSE"
+    },
+    "Peoples’ Friendship University of Russia": {
+      "displayName": "RUDN"
+    },
+    "National University of Science and Technology \"MISiS\"": {
+      "displayName": "MISiS"
+    },
+    "Moscow Technical University": {
+      "displayName": "MTU"
+    },
+    "National Research Nuclear University MEPhI (Moscow Engineering Physics Institute)": {
+      "displayName": "MEPhI"
+    },
+    "NRU HSE Moscow State Institute of Electronics and Mathematics": {
+      "displayName": "MIEM"
+    },
+    "Bauman Moscow State Technical University": {
+      "displayName": "Bauman MSTU"
+    },
+    "National Research University Moscow State University of Civil Engineering": {
+      "displayName": "MGSU"
+    },
+    "Moscow State Technical University of Civil Aviation": {
+      "displayName": "MSTUCA"
+    },
+    "Moscow Technical University of Communications and Informatics": {
+      "displayName": "MTUCI"
+    },
+    "Moscow Institute of Electronic Technology": {
+      "displayName": "MIET"
+    },
+    "* Moscow Institute of Electronic Technology": {
+      "displayName": "* MIET"
+    },
+    "St. Tikhon Orthodox University": {
+      "displayName": "PSTGU"
+    },
+    "Financial University Under the Government of the Russian Federation": {
+      "displayName": "FinU"
+    },
+    "Skolkovo Institute of Science and Technology": {
+      "displayName": "Skolkovo IST"
     }
+  },
+  "teamOverrideTemplate": {
+    "displayName": "{orgDisplayName}: {funnyName}"
   },
   "scoreboardOverrides": {
-    "showTeamsWithoutSubmissions": true
+    "showTeamsWithoutSubmissions": false
   },
-  "queueSettings": {
-    "waitTimeSeconds": 60,
-    "firstToSolveWaitTimeSeconds": 120,
-    "featuredRunWaitTimeSeconds": 60,
-    "inProgressRunWaitTimeSeconds": 300,
-    "maxQueueSize": 15,
-    "maxUntestedRun": 5
+  "problemOverrides": {
+    "7/2023_10_08/UfqtArsDig": {"color": "#ffebee"},
+    "7/2023_10_08/9rP4PKPpX1": {"color": "#dc143c"},
+    "7/2023_10_08/dkhxx8x9do": {"color": "#ffa500"},
+    "7/2023_10_08/XgUHAocBoh": {"color": "#120a8f"},
+    "7/2023_10_08/7OkUhGykAR": {"color": "#808080"},
+    "7/2023_10_08/B2JbJmg48g": {"color": "#000000"},
+    "7/2023_10_08/WOgiWhR0qT": {"color": "#8b4513"},
+    "7/2023_10_08/j89CK8UcNC": {"color": "#8b0000"},
+    "7/2023_10_08/85k59vi2G8": {"color": "#ffff00"},
+    "7/2023_10_08/v1YltEU5XF": {"color": "#ffb6c1"},
+    "7/2023_10_08/ilUTg3oBV2": {"color": "#008000"},
+    "7/2023_10_06/K2hmViwR9N": {"color": "#42aaff"},
+    "7/2023_10_06/SpSv4W4hZZ": {"color": "#800000"}
   }
 }
