@@ -30,7 +30,7 @@ class DbOptions(val user: String, val password: String) {
 }
 
 object Config : CliktCommand(printHelpOnEmptyArgs = true) {
-    val cdsSettings by CdsCommandLineOptions()
+    private val cdsSettings by CdsCommandLineOptions()
     val dbConfig by option("--database-file", help = "Database config file")
         .path(canBeDir = false, mustExist = true, canBeFile = true)
         .defaultLazy("configDirectory/db.json") { cdsSettings.configDirectory.resolve("db.json") }

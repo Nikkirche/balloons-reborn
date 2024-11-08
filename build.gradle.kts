@@ -1,23 +1,13 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("jvm") version "2.0.20"
+    kotlin("plugin.serialization") version "2.0.20"
     id("io.ktor.plugin") version "2.3.7"
 }
 
-tasks{
-    withType<KotlinCompile> {
-//        kotlinOptions {
-//            freeCompilerArgs += listOf("-Xskip-prerelease-check")
-//            jvmTarget = "21"
-//        }
-    }
-}
 group = "com.balloons"
 version = "0.0.1"
 
@@ -36,11 +26,6 @@ repositories {
         }
     }
     mavenCentral()
-    maven(
-        url = uri(
-            "https://jitpack.io"
-        )
-    )
 }
 val exposedVersion: String by project
 dependencies {
@@ -59,6 +44,4 @@ dependencies {
     implementation("org.mariadb.jdbc:mariadb-java-client:3.4.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     implementation("app.softwork:kotlinx-serialization-csv:0.0.18")
-
 }
-

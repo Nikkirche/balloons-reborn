@@ -13,10 +13,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.time.DurationUnit
 
 object Storage {
-    val connection: Database
+    lateinit var connection: Database
     val logger by getLogger()
 
-    init {
+    fun init(){
         val dbSettings = DbOptions.fromInputStream(Config.dbConfig.toFile().inputStream())
         connection = Database.connect(
             url = "jdbc:mariadb://localhost:3306/balloons",
@@ -32,7 +32,6 @@ object Storage {
             SchemaUtils.create(Volunteers)
         }
     }
-
     fun createSubmission(eid: Int, problemId: Int, team: Int, run: RunInfo) {
         transaction(connection) {
             Submissions.insert {
@@ -79,11 +78,12 @@ object Storage {
     }
 
     fun addProblem(id: String, problem: ProblemInfo, eventId: Int): Int {
+        Storage.logger.info {  problem.toString()}
         return transaction {
             return@transaction Problems.insertAndGetId {
                 it[name] = problem.fullName
                 it[Problems.eventId] = eventId
-                it[letter] = id
+                it[letter] = problem.displayName
             }.value
         }
     }
