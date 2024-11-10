@@ -11,5 +11,5 @@ data class Balloon(
     val problemId: String,
     val time: Duration,
     val takenBy: String? = null,
-    val delivered: Boolean = false
+    val delivered: Boolean = false,
 )

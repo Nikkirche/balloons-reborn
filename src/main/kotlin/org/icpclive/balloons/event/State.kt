@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class State(
     val problems: List<Problem>,
-    val balloons: List<Balloon>
+    val balloons: List<Balloon>,
 )

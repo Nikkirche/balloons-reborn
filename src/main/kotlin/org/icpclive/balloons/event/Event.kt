@@ -30,6 +30,5 @@ data class BalloonUpdated(val balloon: Balloon) : Event {
 @Serializable
 @SerialName("balloonDeleted")
 data class BalloonDeleted(val runId: String) : Event {
-    override fun applyTo(state: State) =
-        state.copy(balloons = state.balloons.filter { it.runId != runId })
+    override fun applyTo(state: State) = state.copy(balloons = state.balloons.filter { it.runId != runId })
 }

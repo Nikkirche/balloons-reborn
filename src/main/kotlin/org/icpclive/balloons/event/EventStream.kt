@@ -15,7 +15,10 @@ class EventStream {
     /**
      * @return `true` if command succeeded, `false` otherwise (in case of concurrent modification, etc.)
      */
-    fun processCommand(command: Command, userId: Long): Boolean {
+    fun processCommand(
+        command: Command,
+        userId: Long,
+    ): Boolean {
         return true
     }
 
@@ -27,11 +30,13 @@ class EventStream {
 
             // Here something in team info may change. So we rewrite the whole history.
             sink.update { (state, _) ->
-                val newState = state.copy(
-                    balloons = state.balloons.map { balloon ->
-                        balloon.copy(team = newContestInfo.getTeam(balloon.team.id))
-                    }
-                )
+                val newState =
+                    state.copy(
+                        balloons =
+                            state.balloons.map { balloon ->
+                                balloon.copy(team = newContestInfo.getTeam(balloon.team.id))
+                            },
+                    )
                 newState with Reload
             }
         }
@@ -44,7 +49,6 @@ class EventStream {
 
     // This can be written in non-concurrent fashion.
     fun processRun(runInfo: RunInfo) {
-
     }
 
     private fun getState() = sink.value.first
