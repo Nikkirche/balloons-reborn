@@ -1,5 +1,9 @@
 package org.icpclive.balloons
 
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
+import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.websocket.webSocket
 import io.ktor.websocket.Frame
@@ -19,6 +23,9 @@ fun Route.balloonWebsocket() {
     val eventStream: EventStream by inject()
 
     webSocket("/api/balloons") {
+        val principal = call.principal<JWTPrincipal>()
+            ?: return@webSocket call.respond(HttpStatusCode.Unauthorized)
+
         val outgoingStream =
             launch {
                 var expectState = true
@@ -40,7 +47,7 @@ fun Route.balloonWebsocket() {
                 }
 
                 val command = Json.Default.decodeFromString<Command>(frame.readText())
-                if (!eventStream.processCommand(command, userId = 1)) { // TODO: set user
+                if (!eventStream.processCommand(command, volunteerId = 1)) { // TODO: set user
                     send("""{"error": "command failed"}""")
                 }
             }

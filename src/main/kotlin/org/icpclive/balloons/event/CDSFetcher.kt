@@ -1,4 +1,4 @@
-package org.icpclive.balloons
+package org.icpclive.balloons.event
 
 import io.ktor.server.application.Application
 import kotlinx.coroutines.CoroutineScope
@@ -6,7 +6,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.launch
-import org.icpclive.balloons.event.EventStream
 import org.icpclive.cds.InfoUpdate
 import org.icpclive.cds.RunUpdate
 import org.icpclive.cds.cli.CdsCommandLineOptions

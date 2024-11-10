@@ -14,8 +14,9 @@ create table if not exists balloon (
     unique (problem_id, team_id)
 );
 
-create table if not exists problem (
-    id bigserial not null primary key,
-    name varchar(255) not null,
-    description text not null
-);
+merge into volunteer
+using (select 1 as id) as data
+on volunteer.id = data.id
+when not matched then
+insert (id, login, password_hash, admin)
+values (1, 'test', 'test', false);

@@ -36,3 +36,4 @@ out/
 .vscode/
 
 /config/
+/db.h2*

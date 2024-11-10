@@ -6,14 +6,18 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface Command
 
+sealed class BalloonCommand : Command {
+    abstract val runId: String
+}
+
 @Serializable
 @SerialName("takeBalloon")
-data class TakeBalloon(val runId: String) : Command
+data class TakeBalloon(override val runId: String) : BalloonCommand()
 
 @Serializable
 @SerialName("dropBalloon")
-data class DropBalloon(val runId: String) : Command
+data class DropBalloon(override val runId: String) : BalloonCommand()
 
 @Serializable
 @SerialName("deliverBalloon")
-data class DeliverBalloon(val runId: String) : Command
+data class DeliverBalloon(override val runId: String) : BalloonCommand()

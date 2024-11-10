@@ -7,8 +7,8 @@
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
-    <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
+    <logger name="org.jooq.Constants" level="WARN" />
     <logger name="org.mariadb.jdbc.client" level="ERROR"/>
     <logger name="org.mariadb.message.server" level="ERROR"/>
 </configuration>

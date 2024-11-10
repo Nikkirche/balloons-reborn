@@ -1,31 +1,19 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jooq.meta.jaxb.Logging
 
-val koinVersion: String by project
-val kotlinVersion: String by project
-val ktorVersion: String by project
-val logbackVersion: String by project
-val jooqVersion: String by project
-val h2Version: String by project
-
 plugins {
-    kotlin("jvm") version "2.0.21"
-    kotlin("plugin.serialization") version "2.0.21"
-    id("io.ktor.plugin") version "2.3.7"
-    id("nu.studer.jooq") version "9.0"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    java
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ktor)
+    alias(libs.plugins.jooq)
 }
 
-tasks {
-    withType<KotlinCompile> {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_21)
-        }
-    }
-}
 group = "org.icpclive.balloons"
 version = "0.0.1"
+
+kotlin {
+    jvmToolchain(21)
+}
 
 application {
     mainClass.set("org.icpclive.balloons.ApplicationKt")
@@ -42,27 +30,24 @@ repositories {
 }
 
 dependencies {
-    implementation("io.insert-koin:koin-core:$koinVersion")
-    implementation("io.insert-koin:koin-ktor:$koinVersion")
-    implementation("io.insert-koin:koin-logger-slf4j:$koinVersion")
-    implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-netty-jvm:$ktorVersion")
-    implementation("io.ktor:ktor-server-resources:$ktorVersion")
-    implementation("io.ktor:ktor-server-websockets:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
-    implementation("com.github.icpc.live-v3:org.icpclive.cds.full:3.3.2")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
-    implementation("com.h2database:h2:$h2Version")
-    implementation("org.jooq:jooq-kotlin:$jooqVersion")
+    implementation(libs.bundles.koin)
+    implementation(libs.bundles.ktor)
+    implementation(libs.logback)
+    implementation(libs.live.cds)
+    implementation(libs.kotlin.serialization.json)
+    implementation(libs.h2)
+    implementation(libs.jooq.kotlin)
 
-    jooqGenerator("com.h2database:h2:$h2Version")
+    jooqGenerator(libs.h2)
 
-    testImplementation("io.ktor:ktor-server-tests-jvm:$ktorVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation(libs.ktor.server.test.host)
+    testImplementation(libs.kotlin.test.junit5)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.launcher)
 }
 
 jooq {
-    version = jooqVersion
+    version = libs.versions.jooq
 
     configurations {
         create("main") {
@@ -89,4 +74,8 @@ jooq {
             }
         }
     }
+}
+
+tasks.named<Test>("test") {
+    useJUnitPlatform()
 }
