@@ -11,6 +11,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.icpclive.balloons.event.Command
 import org.icpclive.balloons.event.EventStream
+import org.icpclive.balloons.event.Reload
 import org.icpclive.cds.util.getLogger
 
 fun Route.balloonWebsocket(eventStream: EventStream) = webSocket("/api/balloons") {
@@ -18,7 +19,7 @@ fun Route.balloonWebsocket(eventStream: EventStream) = webSocket("/api/balloons"
         var expectState = true
 
         eventStream.stream.collect { (state, event) ->
-            if (expectState) {
+            if (expectState || event == Reload) {
                 expectState = false
                 send(Json.Default.encodeToString(state))
             } else {
