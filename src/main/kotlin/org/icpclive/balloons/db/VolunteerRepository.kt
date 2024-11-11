@@ -16,7 +16,7 @@ class VolunteerRepository(private val jooq: DSLContext) {
 
     fun getByLogin(login: String) = jooq.fetchOne(VOLUNTEER, VOLUNTEER.LOGIN.eq(login))
 
-    fun all() = jooq.fetch(VOLUNTEER).into(VolunteerRecord::class.java)
+    fun all(): List<VolunteerRecord> = jooq.selectFrom(VOLUNTEER).orderBy(VOLUNTEER.ID).fetchInto(VolunteerRecord::class.java)
 
     /**
      * @return registered [VolunteerRecord] on success, `null` on failure
