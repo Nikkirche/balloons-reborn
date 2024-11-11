@@ -30,6 +30,8 @@ repositories {
 }
 
 dependencies {
+    jooqGenerator(libs.h2)
+
     implementation(libs.bundles.koin)
     implementation(libs.bundles.ktor)
     implementation(libs.logback)
@@ -37,8 +39,7 @@ dependencies {
     implementation(libs.kotlin.serialization.json)
     implementation(libs.h2)
     implementation(libs.jooq.kotlin)
-
-    jooqGenerator(libs.h2)
+    implementation(libs.bcrypt)
 
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit5)
@@ -69,6 +70,13 @@ jooq {
                     target.apply {
                         packageName = "org.icpclive.balloons.db"
                         directory = "./build/jooq"
+                    }
+                    generate.apply {
+                        isKotlinNotNullPojoAttributes = true
+                        isKotlinNotNullRecordAttributes = true
+                        isKotlinNotNullInterfaceAttributes = true
+                        isKotlinDefaultedNullablePojoAttributes = false
+                        isKotlinDefaultedNullableRecordAttributes = false
                     }
                 }
             }

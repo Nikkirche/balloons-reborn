@@ -21,11 +21,10 @@ class EventStream(private val balloonRepository: BalloonRepository) {
     /**
      * @return `true` if command succeeded, `false` otherwise (in case of concurrent modification, etc.)
      */
-    fun processCommand(command: Command, volunteerId: Long): Boolean {
-        return when (command) {
+    fun processCommand(command: Command, volunteerId: Long): Boolean =
+        when (command) {
             is BalloonCommand -> processBalloonCommand(command, volunteerId)
         }
-    }
 
     private fun processBalloonCommand(command: BalloonCommand, volunteerId: Long): Boolean {
         val balloon = getState().balloons.find { it.runId == command.runId }
@@ -40,7 +39,7 @@ class EventStream(private val balloonRepository: BalloonRepository) {
 
             is DropBalloon -> {
                 if (!balloonRepository.dropBalloon(balloon, volunteerId)) {
-                    return true
+                    return false
                 }
             }
 

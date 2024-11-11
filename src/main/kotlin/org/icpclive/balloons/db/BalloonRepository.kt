@@ -7,6 +7,22 @@ import org.jooq.DSLContext
 import org.jooq.Record
 
 class BalloonRepository(private val jooq: DSLContext) {
+    /**
+     * @return record containing delivery status (`BALLOON.DELIVERED`) and responsible volunteer login (`VOLUNTEER.LOGIN`)
+     */
+    fun getDelivery(balloon: Balloon): Record? =
+        jooq.select(BALLOON.DELIVERED, VOLUNTEER.LOGIN)
+            .from(BALLOON)
+            .leftJoin(VOLUNTEER).on(BALLOON.VOLUNTEER_ID.eq(VOLUNTEER.ID))
+            .where(
+                BALLOON.PROBLEM_ID.eq(balloon.problemId),
+                BALLOON.TEAM_ID.eq(balloon.team.id)
+            )
+            .fetchOne()
+
+    /**
+     * @return `true` if balloon is reserved for this volunteer (even if it already was), `false` otherwise
+     */
     fun reserveBalloon(balloon: Balloon, volunteerId: Long): Boolean =
         jooq.mergeInto(BALLOON)
             .using(jooq.selectOne())
@@ -22,16 +38,9 @@ class BalloonRepository(private val jooq: DSLContext) {
             .set(BALLOON.VOLUNTEER_ID, volunteerId)
             .execute() > 0
 
-    fun getDelivery(balloon: Balloon): Record? =
-        jooq.select(BALLOON.DELIVERED, VOLUNTEER.LOGIN)
-            .from(BALLOON)
-            .leftJoin(VOLUNTEER).on(BALLOON.VOLUNTEER_ID.eq(VOLUNTEER.ID))
-            .where(
-                BALLOON.PROBLEM_ID.eq(balloon.problemId),
-                BALLOON.TEAM_ID.eq(balloon.team.id)
-            )
-            .fetchOne()
-
+    /**
+     * @return `true` if balloon was dropped, `false` otherwise
+     */
     fun dropBalloon(balloon: Balloon, volunteerId: Long): Boolean =
         jooq.update(BALLOON)
             .setNull(BALLOON.VOLUNTEER_ID)
@@ -43,6 +52,9 @@ class BalloonRepository(private val jooq: DSLContext) {
             )
             .execute() > 0
 
+    /**
+     * @return `true` if balloon is delivered (even if it already was), `false` otherwise
+     */
     fun deliverBalloon(balloon: Balloon, volunteerId: Long): Boolean =
         jooq.update(BALLOON)
             .set(BALLOON.DELIVERED, true)
