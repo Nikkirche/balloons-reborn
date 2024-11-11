@@ -24,7 +24,7 @@ private const val BCRYPT_COST = 12
 @Serializable
 data class Credentials(
     val login: String,
-    val password: String
+    val password: String,
 )
 
 fun Route.authController(balloonConfig: BalloonConfig) {
@@ -72,11 +72,13 @@ fun Route.authController(balloonConfig: BalloonConfig) {
 
             val credentials = call.receive<Credentials>()
 
-            val newVolunteer = volunteerRepository.register(
-                credentials.login,
-                bcryptHasher.hashToString(BCRYPT_COST, credentials.password.toCharArray()),
-                canAccess = principal != null // If admin is registering user, access is given by default
-            )
+            val newVolunteer =
+                volunteerRepository.register(
+                    credentials.login,
+                    bcryptHasher.hashToString(BCRYPT_COST, credentials.password.toCharArray()),
+                    // If admin is registering user, access is given by default
+                    canAccess = principal != null,
+                )
 
             if (newVolunteer == null) {
                 call.respond(HttpStatusCode.Conflict, "User with the same login exists")

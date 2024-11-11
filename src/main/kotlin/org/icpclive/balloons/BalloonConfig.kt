@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class BalloonConfig(
     val secretKey: String,
-    val allowPublicRegistration: Boolean = true
+    val allowPublicRegistration: Boolean = true,
 )

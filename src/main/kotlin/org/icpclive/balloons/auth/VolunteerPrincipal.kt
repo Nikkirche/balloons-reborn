@@ -7,5 +7,5 @@ import org.icpclive.balloons.db.tables.records.VolunteerRecord
 
 class VolunteerPrincipal(
     val volunteer: VolunteerRecord,
-    payload: Payload
+    payload: Payload,
 ) : Principal, JWTPayloadHolder(payload)

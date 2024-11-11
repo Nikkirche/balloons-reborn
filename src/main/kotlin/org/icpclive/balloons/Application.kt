@@ -55,7 +55,7 @@ object Application : CliktCommand("balloons") {
                 slf4jLogger()
                 modules(
                     databaseModule(databaseFile),
-                    eventModule(cdsSettings)
+                    eventModule(cdsSettings),
                 )
             }
 

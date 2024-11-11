@@ -16,19 +16,22 @@ class BalloonRepository(private val jooq: DSLContext) {
             .leftJoin(VOLUNTEER).on(BALLOON.VOLUNTEER_ID.eq(VOLUNTEER.ID))
             .where(
                 BALLOON.PROBLEM_ID.eq(balloon.problemId),
-                BALLOON.TEAM_ID.eq(balloon.team.id)
+                BALLOON.TEAM_ID.eq(balloon.team.id),
             )
             .fetchOne()
 
     /**
      * @return `true` if balloon is reserved for this volunteer (even if it already was), `false` otherwise
      */
-    fun reserveBalloon(balloon: Balloon, volunteerId: Long): Boolean =
+    fun reserveBalloon(
+        balloon: Balloon,
+        volunteerId: Long,
+    ): Boolean =
         jooq.mergeInto(BALLOON)
             .using(jooq.selectOne())
             .on(
                 BALLOON.PROBLEM_ID.eq(balloon.problemId),
-                BALLOON.TEAM_ID.eq(balloon.team.id)
+                BALLOON.TEAM_ID.eq(balloon.team.id),
             )
             .whenMatchedAnd(BALLOON.VOLUNTEER_ID.isNull.or(BALLOON.VOLUNTEER_ID.eq(volunteerId)))
             .thenUpdate().set(BALLOON.VOLUNTEER_ID, volunteerId)
@@ -41,27 +44,33 @@ class BalloonRepository(private val jooq: DSLContext) {
     /**
      * @return `true` if balloon was dropped, `false` otherwise
      */
-    fun dropBalloon(balloon: Balloon, volunteerId: Long): Boolean =
+    fun dropBalloon(
+        balloon: Balloon,
+        volunteerId: Long,
+    ): Boolean =
         jooq.update(BALLOON)
             .setNull(BALLOON.VOLUNTEER_ID)
             .where(
                 BALLOON.PROBLEM_ID.eq(balloon.problemId),
                 BALLOON.TEAM_ID.eq(balloon.team.id),
                 BALLOON.VOLUNTEER_ID.eq(volunteerId),
-                BALLOON.DELIVERED.eq(false)
+                BALLOON.DELIVERED.eq(false),
             )
             .execute() > 0
 
     /**
      * @return `true` if balloon is delivered (even if it already was), `false` otherwise
      */
-    fun deliverBalloon(balloon: Balloon, volunteerId: Long): Boolean =
+    fun deliverBalloon(
+        balloon: Balloon,
+        volunteerId: Long,
+    ): Boolean =
         jooq.update(BALLOON)
             .set(BALLOON.DELIVERED, true)
             .where(
                 BALLOON.PROBLEM_ID.eq(balloon.problemId),
                 BALLOON.TEAM_ID.eq(balloon.team.id),
-                BALLOON.VOLUNTEER_ID.eq(volunteerId)
+                BALLOON.VOLUNTEER_ID.eq(volunteerId),
             )
             .execute() > 0
 }

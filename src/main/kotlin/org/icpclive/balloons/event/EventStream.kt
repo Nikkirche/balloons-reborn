@@ -21,14 +21,21 @@ class EventStream(private val balloonRepository: BalloonRepository) {
     /**
      * @return `true` if command succeeded, `false` otherwise (in case of concurrent modification, etc.)
      */
-    fun processCommand(command: Command, volunteerId: Long): Boolean =
+    fun processCommand(
+        command: Command,
+        volunteerId: Long,
+    ): Boolean =
         when (command) {
             is BalloonCommand -> processBalloonCommand(command, volunteerId)
         }
 
-    private fun processBalloonCommand(command: BalloonCommand, volunteerId: Long): Boolean {
-        val balloon = getState().balloons.find { it.runId == command.runId }
-            ?: return false
+    private fun processBalloonCommand(
+        command: BalloonCommand,
+        volunteerId: Long,
+    ): Boolean {
+        val balloon =
+            getState().balloons.find { it.runId == command.runId }
+                ?: return false
 
         when (command) {
             is TakeBalloon -> {
@@ -99,7 +106,6 @@ class EventStream(private val balloonRepository: BalloonRepository) {
             runs.update { runs ->
                 runs.filter { it.runId != runId }.plus(Run(runInfo)).sorted()
             }
-
         } else {
             if (existingRun == null) {
                 return
@@ -119,7 +125,10 @@ class EventStream(private val balloonRepository: BalloonRepository) {
     /**
      * Recalculates current state by [runs] and commits it to [sink].
      */
-    private fun synchronizeProblemState(problemId: String, teamId: String) {
+    private fun synchronizeProblemState(
+        problemId: String,
+        teamId: String,
+    ) {
         val existingBalloon = getState().balloons.find { it.problemId == problemId && it.team.id == teamId }
         val existingFTS = getState().balloons.find { it.problemId == problemId && it.isFTS }
 
@@ -150,8 +159,9 @@ class EventStream(private val balloonRepository: BalloonRepository) {
 
             if (actualFTS != null) {
                 // Add FTS for new run
-                val balloon = getState().balloons.find { it.runId == actualFTS.runId }
-                    ?: throw IllegalStateException("No balloon for FTS run $actualFTS found")
+                val balloon =
+                    getState().balloons.find { it.runId == actualFTS.runId }
+                        ?: throw IllegalStateException("No balloon for FTS run $actualFTS found")
 
                 if (!balloon.isFTS) {
                     updateSink(BalloonUpdated(balloon.copy(isFTS = true)))
@@ -188,7 +198,7 @@ class EventStream(private val balloonRepository: BalloonRepository) {
         val delivery = balloonRepository.getDelivery(this)
         return this.copy(
             takenBy = delivery?.get(VOLUNTEER.LOGIN),
-            delivered = delivery?.get(BALLOON.DELIVERED) ?: false
+            delivered = delivery?.get(BALLOON.DELIVERED) ?: false,
         )
     }
 

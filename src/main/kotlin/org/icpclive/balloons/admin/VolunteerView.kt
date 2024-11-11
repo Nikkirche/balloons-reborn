@@ -8,12 +8,12 @@ data class VolunteerView(
     val id: Long,
     val login: String,
     val canAccess: Boolean,
-    val canManage: Boolean
+    val canManage: Boolean,
 ) {
     constructor(record: VolunteerRecord) : this(
         record.id!!,
         record.login,
         record.canAccess!!,
-        record.canManage!!
+        record.canManage!!,
     )
 }

@@ -15,7 +15,11 @@ class VolunteerRepository(private val jooq: DSLContext) {
     /**
      * @return registered [VolunteerRecord] on success, `null` on failure
      */
-    fun register(login: String, passwordHash: String, canAccess: Boolean): VolunteerRecord? =
+    fun register(
+        login: String,
+        passwordHash: String,
+        canAccess: Boolean,
+    ): VolunteerRecord? =
         jooq.selectFrom(
             DSL.finalTable(
                 DSL.mergeInto(VOLUNTEER)
@@ -24,7 +28,7 @@ class VolunteerRepository(private val jooq: DSLContext) {
                     .whenNotMatchedThenInsert()
                     .set(VOLUNTEER.LOGIN, login)
                     .set(VOLUNTEER.PASSWORD_HASH, passwordHash)
-                    .set(VOLUNTEER.CAN_ACCESS, canAccess)
-            )
+                    .set(VOLUNTEER.CAN_ACCESS, canAccess),
+            ),
         ).fetchOne()
 }
