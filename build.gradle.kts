@@ -2,10 +2,10 @@ import org.jooq.meta.jaxb.Logging
 
 plugins {
     java
+    alias(libs.plugins.jooq)
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ktor)
-    alias(libs.plugins.jooq)
 }
 
 group = "org.icpclive.balloons"
@@ -16,7 +16,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("org.icpclive.balloons.ApplicationKt")
+    mainClass.set("org.icpclive.balloons.CliKt")
 
     val isDevelopment: Boolean = project.ext.has("development")
     applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")

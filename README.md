@@ -1,19 +1,72 @@
-### Структура проекта 
-Проект состоит из двух частей - скрипт обновления   
-(есть легаси версия update.py и новая baloons-kotlin которая работает через cds)   
-и часть с сайтом - ball.sql
-### Пререквизиты
-* java 21
-* mariadb 
-* python 3
-### Запуск скрипта обновления(CDS)
-1. Скачайте данный репозиторий
-2. Запустите ```./gradlew run --args='-c config'  ```, где config это папка с конфигом парсера.  
-Формат конфига можно посмотреть [тут](https://github.com/icpc/live-v3).
-Логин и пароль бд указывается в папке с конфигом в файле db.json. Для примера можно посмотреть на config-sample
-### Запуск сайта
-1. Скачайте [репозиторий](https://github.com/Nikkirche/balloons) из ветки 2024
-2. Установите пакеты из requirements.txt 
-'user': <user>, 'db': <db-name>, 'passwd': <passwd> }```
-3. Запустите через python ball.py
-4. Добавьте login своего пользователя в список allowed_users в файле config.py
+# Balloons Manager
+
+## Requirements
+
+* Java 21
+
+## Setup
+
+1. Use the same configs as in [ICPC Live Overlay v3](https://github.com/icpc/live-v3)
+2. Add `balloons.json` with
+
+   ```json
+   {
+     "secretKey": "",                 // (required)
+     "allowPublicRegistration": true, // (default: true)
+     "port": 8000                     // (default: 8001)
+   }
+   ```
+
+   If public registration is allowed (**default**), users can create themselves but you still need to approve them.
+   Otherwise you need to register everyone in admin interface or via CLI.
+
+## Launch
+
+```bash
+java -jar balloons.jar run -c path/to/config
+```
+
+You can customize a few options:
+* We create H2 database that contains a few files. You can control its location by `--database-file=/path/to/h2`, by default it is created
+  in current working directory. [Read more](http://www.h2database.com/html/features.html#database_file_layout) about database files.
+
+  This argument should come **before** `run` and be **the same** in all CLI commands.
+
+* All customization supported by [Overlay](https://github.com/icpc/live-v3) are supported!
+  You likely want to [set problem colors](https://github.com/icpc/live-v3/blob/main/docs/advanced.json.md#change-problem-info).
+
+## CLI
+
+```bash
+# Create a volunteer
+java -jar balloons.jar volunteer create login password
+
+# Create an admin
+java -jar balloons.jar volunteer create --admin login password
+
+# Make the volunteer an admin
+java -jar balloons.jar volunteer update login --make-admin
+
+# Change password
+java -jar balloons.jar volunteer update login --password=password
+
+# Database SQL shell
+java -jar balloons.jar h2shell
+```
+
+## Development
+
+### Build
+
+This task should do the trick.
+
+```bash
+gradle shadowJar
+```
+
+## TODO
+
+- [ ] Frontend
+- [ ] CI
+- [ ] Tests
+- [ ] Some docs on how to develop it

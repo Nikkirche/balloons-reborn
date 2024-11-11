@@ -19,8 +19,6 @@ import org.icpclive.balloons.db.VolunteerRepository
 import org.koin.ktor.ext.inject
 import kotlin.time.Duration.Companion.days
 
-private const val BCRYPT_COST = 12
-
 @Serializable
 data class Credentials(
     val login: String,
@@ -28,7 +26,6 @@ data class Credentials(
 )
 
 fun Route.authController(balloonConfig: BalloonConfig) {
-    val bcryptHasher = BCrypt.withDefaults()
     val bcryptVerifier = BCrypt.verifyer()
     val volunteerRepository: VolunteerRepository by inject()
 
@@ -75,7 +72,7 @@ fun Route.authController(balloonConfig: BalloonConfig) {
             val newVolunteer =
                 volunteerRepository.register(
                     credentials.login,
-                    bcryptHasher.hashToString(BCRYPT_COST, credentials.password.toCharArray()),
+                    credentials.password,
                     // If admin is registering user, access is given by default
                     canAccess = principal != null,
                 )

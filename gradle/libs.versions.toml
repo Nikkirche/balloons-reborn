@@ -25,6 +25,7 @@ bcrypt = { module = "at.favre.lib:bcrypt", version = "0.10.2" }
 
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 
+# Don't update further until this is fixed: https://github.com/InsertKoinIO/koin/issues/1716
 live-cds = { module = "com.github.icpc.live-v3:org.icpclive.cds.full", version = "5bfde01924e424c6aceba97b7abdbce5bbdd0ee1" }
 
 kotlin-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version = "1.7.1" }

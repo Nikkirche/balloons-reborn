@@ -36,4 +36,10 @@ out/
 .vscode/
 
 /config/
-/db.h2*
+
+*.mv.db
+*.trace.db
+*.lock.db
+*.temp.db
+*.newFile
+*.tempFile

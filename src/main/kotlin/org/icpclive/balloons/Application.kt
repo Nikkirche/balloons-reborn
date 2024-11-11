@@ -1,9 +1,8 @@
 package org.icpclive.balloons
 
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.core.main
+import com.github.ajalt.clikt.core.requireObject
 import com.github.ajalt.clikt.parameters.groups.provideDelegate
-import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.defaultLazy
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.path
@@ -20,6 +19,7 @@ import kotlinx.serialization.json.decodeFromStream
 import org.icpclive.balloons.admin.adminController
 import org.icpclive.balloons.auth.authController
 import org.icpclive.balloons.auth.installJwt
+import org.icpclive.balloons.db.DatabaseConfig
 import org.icpclive.balloons.db.databaseModule
 import org.icpclive.balloons.event.eventModule
 import org.icpclive.balloons.event.launchCDSFetcher
@@ -29,32 +29,30 @@ import org.koin.ktor.plugin.Koin
 import org.koin.ktor.plugin.KoinApplicationStopped
 import org.koin.logger.slf4jLogger
 import java.sql.Connection
-import kotlin.io.path.Path
 import kotlin.io.path.inputStream
 
-object Application : CliktCommand("balloons") {
-    override val printHelpOnEmptyArgs: Boolean
-        get() = true
+object Application : CliktCommand("run") {
+    override val printHelpOnEmptyArgs = true
 
     private val cdsSettings by CdsCommandLineOptions()
-    private val databaseFile by option("--database-file", help = "Database location")
-        .path(canBeDir = false, canBeSymlink = false)
-        .default(Path("./db.h2"))
+
+    private val databaseConfig: DatabaseConfig by requireObject()
+
     private val balloonConfigFile by option("--balloon-config", help = "Balloon utility config")
         .path(canBeDir = false, canBeSymlink = false, mustExist = true, mustBeReadable = true)
         .defaultLazy("<config-directory>/balloons.json") { cdsSettings.configDirectory.resolve("balloons.json") }
 
     @OptIn(ExperimentalSerializationApi::class)
     private val balloonConfig: BalloonConfig by lazy {
-        balloonConfigFile.inputStream().buffered().use { Json.decodeFromStream(it) }
+        balloonConfigFile.inputStream().buffered().use { Json { allowComments = true }.decodeFromStream(it) }
     }
 
     override fun run() {
-        embeddedServer(Netty, port = 8001) {
+        embeddedServer(Netty, port = balloonConfig.port) {
             install(Koin) {
                 slf4jLogger()
                 modules(
-                    databaseModule(databaseFile),
+                    databaseModule(databaseConfig),
                     eventModule(cdsSettings),
                 )
             }
@@ -80,8 +78,4 @@ object Application : CliktCommand("balloons") {
             }
         }.start(wait = true)
     }
-}
-
-fun main(args: Array<String>) {
-    Application.main(args)
 }
