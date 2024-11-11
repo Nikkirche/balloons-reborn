@@ -21,6 +21,7 @@ import org.icpclive.balloons.auth.authController
 import org.icpclive.balloons.auth.installJwt
 import org.icpclive.balloons.db.DatabaseConfig
 import org.icpclive.balloons.db.databaseModule
+import org.icpclive.balloons.event.contestController
 import org.icpclive.balloons.event.eventModule
 import org.icpclive.balloons.event.launchCDSFetcher
 import org.icpclive.cds.cli.CdsCommandLineOptions
@@ -74,7 +75,7 @@ object Application : CliktCommand("run") {
             routing {
                 adminController()
                 authController(balloonConfig)
-                balloonWebsocket()
+                contestController(balloonConfig)
             }
         }.start(wait = true)
     }
