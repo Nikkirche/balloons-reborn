@@ -82,18 +82,22 @@ jooq {
     }
 }
 
-tasks.named<Test>("test") {
-    useJUnitPlatform()
-}
-
-tasks.named<Jar>("jar") {
-    archiveClassifier = "just"
-}
-
 tasks {
+    named<Test>("test") {
+        useJUnitPlatform()
+    }
+
     shadowJar {
         mergeServiceFiles()
 
         archiveClassifier = null
+    }
+
+    processResources {
+        if (project.properties["balloons.embedFrontend"] == "true") {
+            from(project(":frontend").tasks.named("pnpm_run_build")) {
+                into("frontend")
+            }
+        }
     }
 }

@@ -9,6 +9,8 @@ import com.github.ajalt.clikt.parameters.types.path
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
+import io.ktor.server.http.content.react
+import io.ktor.server.http.content.singlePageApplication
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.server.routing.routing
@@ -64,6 +66,10 @@ object Application : CliktCommand("run") {
             launchCDSFetcher()
 
             routing {
+                singlePageApplication {
+                    react("frontend")
+                    useResources = true
+                }
                 adminController()
                 authController(balloonConfig)
                 contestController(balloonConfig)

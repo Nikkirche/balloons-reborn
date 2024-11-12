@@ -66,7 +66,8 @@ gradle shadowJar
 
 ## TODO
 
-- [ ] Frontend - add balloons page, fix layout, pack to jar
+- [ ] Frontend - add balloons page, fix layout, remember token
 - [ ] CI
 - [ ] Tests
 - [ ] Some docs on how to develop it
+- [ ] Automate JWT secret generation 
