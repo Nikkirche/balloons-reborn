@@ -71,7 +71,7 @@ gradle shadowJar
 
 ## TODO
 
-- [ ] Frontend - add balloons page, fix layout, remember token
+- [ ] Frontend - add halls
 - [ ] CI
 - [ ] Tests
 - [ ] Some docs on how to develop it

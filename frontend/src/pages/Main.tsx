@@ -1,23 +1,19 @@
 import { Navigate } from "react-router-dom";
 import { InfoHolder } from "../types";
+import { GlobalError } from "../components/GlobalError";
 
 const Main = ({ infoHolder }: { infoHolder: InfoHolder }) => {
-    if (!infoHolder.info?.login) {
+    if (!infoHolder.info.login) {
         return <Navigate to="/login" />
     }
 
     if (!infoHolder.info.canAccess && !infoHolder.info.canManage) {
-        return (
-            <div className="global-error">
-                <h1>Forbidden</h1>
-                <p>Ask organizer to give you access.</p>
-            </div>
-        )
+        return <GlobalError title="Forbidden" message="Ask organizer to give you access." />;
     }
 
     return (
         <>
-            <p>Welcome to {infoHolder.info.contestName}!</p>
+            <p>Активный контест: <strong>{infoHolder.info.contestName}</strong></p>
         </>
     );
 };

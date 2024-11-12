@@ -20,6 +20,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import org.icpclive.balloons.admin.adminController
 import org.icpclive.balloons.auth.authController
+import org.icpclive.balloons.auth.authModule
 import org.icpclive.balloons.auth.installJwt
 import org.icpclive.balloons.db.DatabaseConfig
 import org.icpclive.balloons.db.databaseModule
@@ -44,7 +45,7 @@ object Application : CliktCommand("run") {
 
     @OptIn(ExperimentalSerializationApi::class)
     private val balloonConfig: BalloonConfig by lazy {
-        balloonConfigFile.inputStream().buffered().use { Json { allowComments = true }.decodeFromStream(it) }
+        balloonConfigFile.inputStream().buffered().use { balloonConfigSerializer.decodeFromStream(it) }
     }
 
     override fun run() {
@@ -52,16 +53,22 @@ object Application : CliktCommand("run") {
             install(Koin) {
                 slf4jLogger()
                 modules(
+                    authModule(balloonConfig),
                     databaseModule(databaseConfig),
                     eventModule(cdsSettings),
                 )
             }
 
-            install(ContentNegotiation) { json() }
+            install(ContentNegotiation) {
+                json(Json {
+                    encodeDefaults = true
+
+                })
+            }
 
             install(WebSockets)
 
-            installJwt(balloonConfig)
+            installJwt()
 
             launchCDSFetcher()
 
@@ -76,4 +83,7 @@ object Application : CliktCommand("run") {
             }
         }.start(wait = true)
     }
+
+    @OptIn(ExperimentalSerializationApi::class)
+    private val balloonConfigSerializer = Json { allowComments = true }
 }

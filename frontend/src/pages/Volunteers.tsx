@@ -1,14 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Navigate } from 'react-router-dom';
-import { InfoHolder } from '../types';
+import { InfoHolder, Volunteer } from '../types';
 import backendUrls from '../util/backendUrls';
-
-interface Volunteer {
-  id: number;
-  login: string;
-  canAccess: boolean;
-  canManage: boolean;
-}
+import { GlobalError } from '../components/GlobalError';
 
 const VolunteersView = ({ infoHolder }: { infoHolder: InfoHolder }) => {
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
@@ -45,7 +39,7 @@ const VolunteersView = ({ infoHolder }: { infoHolder: InfoHolder }) => {
 
   const handleRoleChange = async (id: number, role: 'canAccess' | 'canManage', newValue: boolean) => {
     if (isUpdating) return;
-    
+
     setIsUpdating(String(id));
     try {
       const response = await fetch(backendUrls.patchVolunteer(id), {
@@ -61,7 +55,7 @@ const VolunteersView = ({ infoHolder }: { infoHolder: InfoHolder }) => {
         throw new Error('Failed to update volunteer');
       }
 
-      setVolunteers(volunteers.map(v => 
+      setVolunteers(volunteers.map(v =>
         v.id === id ? { ...v, [role]: newValue } : v
       ));
     } catch (err) {
@@ -85,84 +79,86 @@ const VolunteersView = ({ infoHolder }: { infoHolder: InfoHolder }) => {
   }
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4">Волонтеры</h2>
+    <main>
+      <h1 className="sr-only">Управление доступом волонтёров</h1>
       {error && (
-        <div className="alert alert-danger alert-dismissible fade show" role="alert">
+        <div className="form-error" role="alert">
           {error}
-          <button type="button" className="btn-close" onClick={() => setError(null)}></button>
+          <a onClick={() => setError(null)}> Закрыть</a>
         </div>
       )}
-      <div className="table-responsive">
-        <table className="table table-striped">
-          <thead>
+      <table>
+        <thead>
+          <tr>
+            <th rowSpan={2} style={{ verticalAlign: 'bottom' }}>Логин</th>
+            <th colSpan={2} style={{ textAlign: 'center' }}>Доступы</th>
+          </tr>
+          <tr>
+            <th>Шарики</th>
+            <th>Волонтеры</th>
+          </tr>
+        </thead>
+        <tbody>
+          {volunteers.length === 0 ? (
             <tr>
-              <th>Логин</th>
-              <th>Доступ к очереди</th>
-              <th>Администратор</th>
+              <td colSpan={3} className="text-center">
+                {error ? 'Не удалось загрузить данные' : 'Нет волонтеров'}
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {volunteers.length === 0 ? (
-              <tr>
-                <td colSpan={3} className="text-center">
-                  {error ? 'Не удалось загрузить данные' : 'Нет волонтеров'}
-                </td>
-              </tr>
-            ) : (
-              volunteers.map((volunteer) => {
-                const isSelf = volunteer.login === infoHolder.info?.login;
-                const isUpdatingThis = isUpdating === String(volunteer.id);
-                
-                return (
-                  <tr key={volunteer.id}>
-                    <td>{volunteer.login}</td>
-                    <td>
-                      <div className="d-flex align-items-center gap-2">
-                        <span className={`badge ${volunteer.canAccess ? 'bg-success' : 'bg-secondary'}`}>
-                          {volunteer.canAccess ? 'Да' : 'Нет'}
-                        </span>
-                        {!isSelf && (!volunteer.canAccess || !volunteer.canManage) && (
-                          <button
-                            className={`btn btn-sm btn-${volunteer.canAccess ? 'danger' : 'success'}`}
-                            onClick={() => void handleRoleChange(volunteer.id, 'canAccess', !volunteer.canAccess)}
-                            disabled={isUpdatingThis}
-                          >
-                            {isUpdatingThis ? '...' : (volunteer.canAccess ? 'Отозвать' : 'Выдать')}
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="d-flex align-items-center gap-2">
-                        <span className={`badge ${volunteer.canManage ? 'bg-success' : 'bg-secondary'}`}>
-                          {volunteer.canManage ? 'Да' : 'Нет'}
-                        </span>
-                        {!isSelf && (
-                          <button
-                            className={`btn btn-sm btn-${volunteer.canManage ? 'danger' : 'success'}`}
-                            onClick={() => void handleRoleChange(volunteer.id, 'canManage', !volunteer.canManage)}
-                            disabled={isUpdatingThis}
-                          >
-                            {isUpdatingThis ? '...' : (volunteer.canManage ? 'Отозвать' : 'Выдать')}
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
+          ) : (
+            volunteers.map((volunteer) => {
+              const isSelf = volunteer.login === infoHolder.info?.login;
+              const isUpdatingThis = isUpdating === String(volunteer.id);
+
+              return (
+                <tr key={volunteer.id}>
+                  <td>{volunteer.login}</td>
+                  <td>
+                    <span>
+                      {volunteer.canAccess ? '✔️ ' : '❌ '}
+                    </span>
+                    {!isSelf && (!volunteer.canAccess || !volunteer.canManage) && (
+                      <a
+                        onClick={() => void handleRoleChange(volunteer.id, 'canAccess', !volunteer.canAccess)}
+                        className={isUpdatingThis ? 'disabled access-link' : 'access-link'}
+                      >
+                        {isUpdatingThis ? '...' : (volunteer.canAccess ? 'Отозвать' : 'Выдать')}
+                      </a>
+                    )}
+                  </td>
+                  <td>
+                    <div className="d-flex align-items-center gap-2">
+                      <span>
+                        {volunteer.canManage ? '✔️ ' : '❌ '}
+                      </span>
+                      {isSelf && 'Это вы'}
+                      {!isSelf && (
+                        <a
+                          onClick={() => void handleRoleChange(volunteer.id, 'canManage', !volunteer.canManage)}
+                          className={isUpdatingThis ? 'disabled access-link' : 'access-link'}
+                        >
+                          {isUpdatingThis ? '...' : (volunteer.canManage ? 'Отозвать' : 'Выдать')}
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })
+          )}
+        </tbody>
+      </table>
+    </main>
   );
 };
 
 const Volunteers = ({ infoHolder }: { infoHolder: InfoHolder }) => {
-  if (!infoHolder.info?.canManage) {
-    return <Navigate to="/" />;
+  if (!infoHolder.info.login) {
+    return <Navigate to="/login" />;
+  }
+
+  if (!infoHolder.info.canAccess) {
+    return <GlobalError title="Forbidden" message="Ask organizer to give you access." />;
   }
 
   return <VolunteersView infoHolder={infoHolder} />;

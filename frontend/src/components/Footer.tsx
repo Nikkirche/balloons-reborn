@@ -10,31 +10,15 @@ const Footer = ({ infoHolder }: { infoHolder: InfoHolder }) => {
   };
 
   return (
-    <footer className="footer mt-auto py-3 bg-light">
-      <div className="container d-flex justify-content-between align-items-center">
-        <div>
-          <a 
-            href="https://github.com/nsychev/balloons-reborn" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-muted text-decoration-none"
-          >
-            Open source
-          </a>
-        </div>
-        
-        {infoHolder.info?.login && (
-          <div className="text-muted">
-            {infoHolder.info.login}{' '}
-            <button 
-              onClick={handleLogout}
-              className="btn btn-link text-muted p-0 text-decoration-none"
-            >
-              Выйти
-            </button>
-          </div>
-        )}
-      </div>
+    <footer>
+      {infoHolder.info?.login && <>
+        <span>Вы вошли как <strong>{infoHolder.info.login}</strong> </span>
+        <a onClick={handleLogout}>Выйти</a>
+      </>}
+      <span>
+        <a href="https://github.com/nsychev/balloons-reborn" target="_blank" rel="noopener noreferrer">Open&nbsp;source</a>
+      </span>
+
     </footer>
   );
 };

@@ -19,7 +19,6 @@ const Register = ({ infoHolder }: { infoHolder: InfoHolder }) => {
     e.preventDefault();
     setError(null);
 
-    // Validate passwords
     if (password.length < 6) {
       setError('Пароль должен содержать минимум 6 символов');
       return;
@@ -60,64 +59,50 @@ const Register = ({ infoHolder }: { infoHolder: InfoHolder }) => {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-4">
-          <h2 className="mb-4">Регистрация</h2>
-          <form onSubmit={(e) => { void handleSubmit(e) }}>
-            <div className="mb-3">
-              <label htmlFor="login" className="form-label">Логин</label>
-              <input
-                type="text"
-                className="form-control"
-                id="login"
-                value={login}
-                onChange={(e) => setLogin(e.target.value)}
-                disabled={isLoading}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="password" className="form-label">Пароль</label>
-              <input
-                type="password"
-                className="form-control"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLoading}
-                required
-                minLength={6}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="confirmPassword" className="form-label">Повторите пароль</label>
-              <input
-                type="password"
-                className="form-control"
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                disabled={isLoading}
-                required
-              />
-            </div>
-            {error && (
-              <div className="alert alert-danger" role="alert">
-                {error}
-              </div>
-            )}
-            <button 
-              type="submit" 
-              className="btn btn-primary w-100"
-              disabled={isLoading}
-            >
-              {isLoading ? 'Загрузка...' : 'Зарегистрироваться'}
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+    <main>
+      <h1 className="sr-only">Регистрация</h1>
+      <form onSubmit={(e) => { void handleSubmit(e) }}>
+        <label htmlFor="login">Логин</label>
+        <input
+          type="text"
+          id="login"
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
+          disabled={isLoading}
+          required
+        />
+        <label htmlFor="password">Пароль</label>
+        <input
+          type="password"
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={isLoading}
+          required
+          minLength={6}
+        />
+        <label htmlFor="confirmPassword">Повторите пароль</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          disabled={isLoading}
+          required
+        />
+        {error && (
+          <div className="form-error" role="alert">
+            {error}
+          </div>
+        )}
+        <button
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Загрузка...' : 'Зарегистрироваться'}
+        </button>
+      </form>
+    </main>
   );
 };
 

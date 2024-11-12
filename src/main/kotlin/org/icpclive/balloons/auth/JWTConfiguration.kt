@@ -1,32 +1,35 @@
 package org.icpclive.balloons.auth
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwt.interfaces.JWTVerifier
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.jwt.JWTCredential
 import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.response.respond
-import org.icpclive.balloons.BalloonConfig
 import org.icpclive.balloons.db.VolunteerRepository
 import org.koin.ktor.ext.inject
 
-fun Application.installJwt(balloonConfig: BalloonConfig) {
-    val volunteerRepository: VolunteerRepository by inject()
+class CredentialValidator(private val volunteerRepository: VolunteerRepository) {
+    fun validate(credential: JWTCredential): VolunteerPrincipal? =
+        credential.payload.let {
+            val volunteerId = it.subject?.toLongOrNull() ?: return@let null
+            val volunteer = volunteerRepository.getById(volunteerId) ?: return@let null
+
+            VolunteerPrincipal(volunteer, it)
+        }
+}
+
+fun Application.installJwt() {
+    val jwtVerifier: JWTVerifier by inject()
+    val credentialValidator: CredentialValidator by inject()
 
     install(Authentication) {
         jwt {
             realm = "balloons"
-            verifier(JWT.require(Algorithm.HMAC256(balloonConfig.secretKey)).build())
-            validate { credential ->
-                credential.payload.let {
-                    val volunteerId = it.subject?.toLongOrNull() ?: return@let null
-                    val volunteer = volunteerRepository.getById(volunteerId) ?: return@let null
-
-                    VolunteerPrincipal(volunteer, it)
-                }
-            }
+            verifier(jwtVerifier)
+            validate { credentialValidator.validate(it) }
             challenge { _, _ ->
                 call.respond(HttpStatusCode.Unauthorized)
             }
