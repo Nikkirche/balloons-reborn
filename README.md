@@ -18,7 +18,7 @@
    ```
 
    If public registration is allowed (**default**), users can create themselves but you still need to approve them.
-   Otherwise you need to register everyone in admin interface or via CLI.
+   Otherwise, you need to register everyone in admin interface or via CLI.
 
 ## Launch
 
@@ -35,6 +35,11 @@ You can customize a few options:
 * All customization supported by [Overlay](https://github.com/icpc/live-v3) are supported!
   You likely want to [set problem colors](https://github.com/icpc/live-v3/blob/main/docs/advanced.json.md#change-problem-info).
 
+Then navigate in your browser to http://<ip>:<port>/ (by default and from the same machine, http://localhost:8001/). If this service
+is exposed to the internet, it's strictly recommended to use some reverse proxy like nginx.
+
+Don't forget to add admin user (see below).
+
 ## CLI
 
 ```bash
@@ -48,7 +53,7 @@ java -jar balloons.jar volunteer create --admin login password
 java -jar balloons.jar volunteer update login --make-admin
 
 # Change password
-java -jar balloons.jar volunteer update login --password=password
+java -jar balloons.jar volunteer update login --new-password=password
 
 # Database SQL shell
 java -jar balloons.jar h2shell
