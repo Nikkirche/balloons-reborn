@@ -1,11 +1,12 @@
 import org.jooq.meta.jaxb.Logging
 
 plugins {
+    application
     java
     alias(libs.plugins.jooq)
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ktor)
+    alias(libs.plugins.shadow)
 }
 
 group = "org.icpclive.balloons"
@@ -17,9 +18,6 @@ kotlin {
 
 application {
     mainClass.set("org.icpclive.balloons.CliKt")
-
-    val isDevelopment: Boolean = project.ext.has("development")
-    applicationDefaultJvmArgs = listOf("-Dio.ktor.development=$isDevelopment")
 }
 
 repositories {
@@ -86,4 +84,16 @@ jooq {
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
+}
+
+tasks.named<Jar>("jar") {
+    archiveClassifier = "just"
+}
+
+tasks {
+    shadowJar {
+        mergeServiceFiles()
+
+        archiveClassifier = null
+    }
 }

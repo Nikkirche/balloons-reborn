@@ -10,7 +10,6 @@ import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.response.respond
 import org.icpclive.balloons.BalloonConfig
 import org.icpclive.balloons.db.VolunteerRepository
-import org.icpclive.cds.util.getLogger
 import org.koin.ktor.ext.inject
 
 fun Application.installJwt(balloonConfig: BalloonConfig) {
@@ -22,11 +21,8 @@ fun Application.installJwt(balloonConfig: BalloonConfig) {
             verifier(JWT.require(Algorithm.HMAC256(balloonConfig.secretKey)).build())
             validate { credential ->
                 credential.payload.let {
-                    logger.info { "You are $it" }
                     val volunteerId = it.subject?.toLongOrNull() ?: return@let null
-                    logger.info { "Claim is $it" }
                     val volunteer = volunteerRepository.getById(volunteerId) ?: return@let null
-                    logger.info { "Volunteer is $it" }
 
                     VolunteerPrincipal(volunteer, it)
                 }
@@ -37,5 +33,3 @@ fun Application.installJwt(balloonConfig: BalloonConfig) {
         }
     }
 }
-
-private val logger by getLogger()

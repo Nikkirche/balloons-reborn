@@ -12,12 +12,13 @@ import io.ktor.server.routing.patch
 import kotlinx.serialization.Serializable
 import org.icpclive.balloons.auth.VolunteerPrincipal
 import org.icpclive.balloons.db.VolunteerRepository
+import org.icpclive.cds.util.getLogger
 import org.koin.ktor.ext.inject
 
 @Serializable
 data class VolunteerPatch(
-    val canManage: Boolean?,
-    val canAccess: Boolean?,
+    val canManage: Boolean? = null,
+    val canAccess: Boolean? = null,
 )
 
 fun Route.adminController() {
@@ -47,10 +48,11 @@ fun Route.adminController() {
                 call.parameters["id"]?.toLongOrNull()
                     ?: return@patch call.respond(HttpStatusCode.BadRequest)
 
-            volunteerRepository.getById(volunteerId)
+            val volunteer = volunteerRepository.getById(volunteerId)
                 ?: return@patch call.respond(HttpStatusCode.NotFound)
 
-            val patch: VolunteerPatch = call.receive()
+            val patch = call.receive<VolunteerPatch>()
+            logger.info { "Manager ${principal.volunteer.login} changes ${volunteer.login} rights to $patch"}
 
             if (patch.canAccess == null && patch.canManage == null) {
                 call.respond(HttpStatusCode.BadRequest, "At least canAccess or canManage should be set")
@@ -62,3 +64,5 @@ fun Route.adminController() {
         }
     }
 }
+
+private val logger by getLogger()

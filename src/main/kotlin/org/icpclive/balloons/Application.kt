@@ -25,11 +25,8 @@ import org.icpclive.balloons.event.contestController
 import org.icpclive.balloons.event.eventModule
 import org.icpclive.balloons.event.launchCDSFetcher
 import org.icpclive.cds.cli.CdsCommandLineOptions
-import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
-import org.koin.ktor.plugin.KoinApplicationStopped
 import org.koin.logger.slf4jLogger
-import java.sql.Connection
 import kotlin.io.path.inputStream
 
 object Application : CliktCommand("run") {
@@ -56,12 +53,6 @@ object Application : CliktCommand("run") {
                     databaseModule(databaseConfig),
                     eventModule(cdsSettings),
                 )
-            }
-
-            environment.monitor.subscribe(KoinApplicationStopped) {
-                // Ensure we close connection to database when stopping the application.
-                val database: Connection by inject()
-                runCatching { database.close() }
             }
 
             install(ContentNegotiation) { json() }

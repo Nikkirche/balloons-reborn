@@ -66,7 +66,7 @@ gradle shadowJar
 
 ## TODO
 
-- [ ] Frontend
+- [ ] Frontend - add balloons page, fix layout, pack to jar
 - [ ] CI
 - [ ] Tests
 - [ ] Some docs on how to develop it
