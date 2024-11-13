@@ -10,13 +10,14 @@ const BalloonRow = ({ balloon, problem, actions }: {
   const actionContent = actions(balloon);
   
   const content = useMemo(() => (
-    <div className="balloon-row">
-      <ProblemBox problem={problem} />
-      {balloon.isFTS ? <span className="fts">★</span> : <span></span>}
-      <span className="team-place">{balloon.team.displayName}</span>
-      <div className="actions">{actionContent}</div>
-      <span className="team-name">{balloon.team.fullName}</span>
-    </div>
+      <div className="balloon-row">
+        <ProblemBox problem={problem}/>
+        {balloon.isFTS ? <span className="fts">★</span> : <span></span>}
+        <span className="team-hall">{balloon.team.hall == null ? "??" : balloon.team.hall}</span>
+        <span className="team-place">{balloon.team.place == null ? "??" : balloon.team.place}</span>
+        <div className="actions">{actionContent}</div>
+        <span className="team-name">{balloon.team.fullName}</span>
+      </div>
   ), [balloon, problem, actionContent]);
 
   return content;

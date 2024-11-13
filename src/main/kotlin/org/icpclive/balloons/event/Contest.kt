@@ -16,5 +16,5 @@ data class Contest(
                 .mapValues { (_, value) -> Team(value) },
     )
 
-    fun getTeam(id: String) = teams[id] ?: Team(id, "??", "???", null)
+    fun getTeam(id: String) = teams[id] ?: Team(id, "??", "???", null, null)
 }

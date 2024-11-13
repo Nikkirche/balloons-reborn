@@ -19,7 +19,7 @@ export interface Volunteer {
   login: string;
   canAccess: boolean;
   canManage: boolean;
-};
+}
 
 export interface Problem {
   id: string;
@@ -32,6 +32,7 @@ export interface Team {
   id: string;
   displayName: string;
   fullName: string;
+  place: string | null;
   hall: string | null;
 }
 
